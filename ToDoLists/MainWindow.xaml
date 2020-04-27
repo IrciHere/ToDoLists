@@ -1,0 +1,68 @@
+﻿<Window x:Class="ToDoLists.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ToDoLists"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" MinHeight="450" MinWidth="800">
+    <Border  BorderBrush="#000000" BorderThickness="2">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="11*" />
+                    <RowDefinition Height="1*"  />
+                </Grid.RowDefinitions>
+
+                <Border BorderBrush="#AAAAAA" BorderThickness="1"></Border>
+
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="10*"  />
+                        <RowDefinition Height="1*"  />
+                    </Grid.RowDefinitions>
+
+
+                    <Border BorderBrush="#BBBBBB" BorderThickness="0.5"></Border>
+                    <RichTextBox Name="titleTextBox" Grid.Row="0"></RichTextBox>
+                    <RichTextBox Name="descriptionTextBox" Grid.Row="1"></RichTextBox>
+                    <RichTextBox Name="doneTextBox" Grid.Row="2"></RichTextBox>
+
+
+                </Grid>
+                
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                  
+                    <Button Name="checkDone" Click="checkDoneItem" Grid.Column="0">DONE</Button>
+                    <Button Name="deleteItem" Click="deleteListItem" Grid.Column="1">DELETE</Button>
+                    <Button Name="saveItems" Click="saveItemsList" Grid.Column="2">SAVE</Button>
+                    <Button Name="addItem" Click="openAddWindow" Grid.Column="3">ADD</Button>
+                    
+                    
+                    
+                </Grid>
+                
+                
+            </Grid>
+
+            <ListBox Name="listBox" Grid.Column="0" SelectionChanged="showItem"></ListBox>
+
+            <Border BorderBrush="#AAAAAA" BorderThickness="2" Grid.Column="0"/>
+            <Border BorderBrush="#AAAAAA" BorderThickness="2" Grid.Column="1"/>
+            <Border BorderBrush="#AAAAAA" BorderThickness="2" Grid.Row="1"/>
+        </Grid>
+    </Border>
+</Window>
