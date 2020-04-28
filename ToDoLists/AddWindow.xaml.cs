@@ -27,17 +27,22 @@ namespace ToDoLists
             parent = _parent;
         }
 
+        private void closeWindow(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
         private void addItem(object sender, RoutedEventArgs e)
         {
             if (titleBox.Text == "")
             {
-                Close(); return;
+                MessageBox.Show("Title can't be empty!");
+                return;
             }
-
             title = titleBox.Text;
             description = descriptionBox.Text;
             parent.addNewItem(title, description);
-            Close();
+            Close();  
         }
     }
 }

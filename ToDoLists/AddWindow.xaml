@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="AddWindow" Height="500" Width="400" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="#EEEEEE">
     <Grid>
+        <Button Click="closeWindow" Width="20" Height="20"  VerticalAlignment="Top" HorizontalAlignment="Right" BorderThickness="0" Background="#EEEEEE" Margin="10,10,10,10" Foreground="#999999" FontWeight="DemiBold">X</Button>
         <TextBox Width="40" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="30,20,20,20" BorderThickness="0" Background="#EEEEEE">TITLE</TextBox>
         <Border>
             <TextBox Name="titleBox" IsReadOnly="False" Height="20" Width="350" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="20,50,20,20"></TextBox>

@@ -35,34 +35,21 @@ namespace ToDoLists
 
         private void showItem(object sender, SelectionChangedEventArgs e)
         {
-            titleTextBox.Document.Blocks.Clear();
-            descriptionTextBox.Document.Blocks.Clear();
-            doneTextBox.Document.Blocks.Clear();
-            if (listBox.SelectedIndex == -1)
-            {
-                return;
-            } 
+            titleTextBox.Clear();
+            descriptionTextBox.Clear();
+            doneTextBox.Clear();
+            if (listBox.SelectedIndex == -1) return;
+
             var item = (ListBox) sender;
             var listBoxItem = item.SelectedItem;
             var itemFound = itemsList.Find(findItem => findItem.title == listBoxItem.ToString());
 
-            TextRange rangeTitle = new TextRange(titleTextBox.Document.ContentEnd, titleTextBox.Document.ContentEnd);
-            rangeTitle.Text = itemFound.title + "\n\n";
-            rangeTitle.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.ExtraBold);
-            rangeTitle.ApplyPropertyValue(TextElement.FontSizeProperty, 20.0);
+            titleTextBox.Text = itemFound.title;
+            descriptionTextBox.Text = itemFound.description;
+            doneTextBox.Text = itemFound.done.ToString();
 
-            TextRange rangeDescription = new TextRange(descriptionTextBox.Document.ContentEnd, descriptionTextBox.Document.ContentEnd);
-            rangeDescription.Text = itemFound.description;
-            rangeDescription.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Normal);
-            rangeDescription.ApplyPropertyValue(TextElement.FontSizeProperty, 16.0);
-            rangeDescription.ApplyPropertyValue(TextElement.FontFamilyProperty, "Times New Roman");
-
-            TextRange rangeDone = new TextRange(doneTextBox.Document.ContentEnd, doneTextBox.Document.ContentEnd);
-            rangeDone.Text = "Task done: " + itemFound.done;
-            if (itemFound.done) rangeDone.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Green);
-            else rangeDone.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
-            rangeDone.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
-            rangeDone.ApplyPropertyValue(TextElement.FontSizeProperty, 20.0);
+            if (itemFound.done) doneTextBox.Foreground = Brushes.Green;
+            else doneTextBox.Foreground = Brushes.Red;
         }
 
 
@@ -83,7 +70,9 @@ namespace ToDoLists
             if (listBox.SelectedIndex < 0) return;
             
             var item = listBox.SelectedItem.ToString();
-            var itemToRemove = itemsList.Single(x => x.title == item);
+            var itemToRemove = itemsList.FirstOrDefault(x => x.title == item);
+            if (itemToRemove is null) return;
+
             listBox.SelectedIndex = -1;
             itemsList.Remove(itemToRemove);
             updateListBox();    
@@ -115,19 +104,21 @@ namespace ToDoLists
 
         private void importItemsList()
         {
+            if (!File.Exists("itemsList.json")) return;
+ 
+            using (StreamReader r = new StreamReader("itemsList.json"))
+            {
+                json = r.ReadToEnd();
+            }
+
             try
             {
-                using (StreamReader r = new StreamReader("itemsList.json"))
-                {
-                    json = r.ReadToEnd();
-                }
+                itemsList = JsonConvert.DeserializeObject<List<ToDoItem>>(json);
             }
             catch
             {
-                return;
+                throw new Exception("Invalid file format");
             }
-
-            itemsList = JsonConvert.DeserializeObject<List<ToDoItem>>(json);
         }
 
         private void saveItemsList(object sender, RoutedEventArgs e)

@@ -30,9 +30,9 @@
 
 
                     <Border BorderBrush="#BBBBBB" BorderThickness="0.5"></Border>
-                    <RichTextBox Name="titleTextBox" Grid.Row="0"></RichTextBox>
-                    <RichTextBox Name="descriptionTextBox" Grid.Row="1"></RichTextBox>
-                    <RichTextBox Name="doneTextBox" Grid.Row="2"></RichTextBox>
+                    <TextBox Name="titleTextBox" Grid.Row="0" FontWeight="ExtraBold" FontSize="20.0"></TextBox>
+                    <TextBox Name="descriptionTextBox" Grid.Row="1" FontSize="16.0" FontFamily="Times New Roman"></TextBox>
+                    <TextBox Name="doneTextBox" Grid.Row="2" FontSize="20" FontWeight="Bold"></TextBox>
 
 
                 </Grid>
