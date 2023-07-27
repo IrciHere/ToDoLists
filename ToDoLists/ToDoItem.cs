@@ -1,30 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ToDoLists
+namespace ToDoLists;
+
+public class ToDoItem
 {
-    class ToDoItem
+    private readonly string _title = string.Empty;
+    
+    public required string Title
     {
-        public string title, description;
-        public bool done;
-        public ToDoItem(string _title, string _description)
+        get => _title;
+        init
         {
-            if (_title.Length <= 0)
+            if (string.IsNullOrWhiteSpace(value))
             {
-                throw new Exception("Title can not be empty");
+                throw new Exception("Title can not be empty!");
             }
-            title = _title;
-            description = _description;
-            done = false;
-        }
 
-        public ToDoItem()
-        {
-
+            _title = value;
         }
     }
+
+    public string Description { get; init; } = string.Empty;
+    public bool Done { get; set; } = false;
 }
