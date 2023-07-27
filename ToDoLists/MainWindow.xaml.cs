@@ -1,132 +1,165 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+namespace ToDoLists;
 
-namespace ToDoLists
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    private List<ToDoItem> _itemsList;
+
+    public MainWindow()
     {
-        private List<ToDoItem> itemsList;
-        private string json;
+        _itemsList = new List<ToDoItem>();
+        ImportItemsList();
+        InitializeComponent();
+        UpdateListBox();
+    }
+    
+    private void ShowItem(object sender, SelectionChangedEventArgs e)
+    {
+        ClearPreviewBox();
 
-        public MainWindow()
+        if (listBox.SelectedIndex == -1)
         {
-            itemsList = new List<ToDoItem>();
-            importItemsList();
-            InitializeComponent();
-            updateListBox();
+            return;
         }
 
+        var item = (ListBox)sender;
+        var listBoxItem = item.SelectedItem?.ToString();
 
-        private void showItem(object sender, SelectionChangedEventArgs e)
+        if (listBoxItem == null)
         {
-            titleTextBox.Clear();
-            descriptionTextBox.Clear();
-            doneTextBox.Clear();
-            if (listBox.SelectedIndex == -1) return;
+            return;
+        }
+        
+        ToDoItem itemFound = GetItemFromList(listBoxItem);
 
-            var item = (ListBox)sender;
-            var listBoxItem = item.SelectedItem;
-            var itemFound = itemsList.Find(findItem => findItem.Title == listBoxItem.ToString());
+        titleTextBox.Text = itemFound.Title;
+        descriptionTextBox.Text = itemFound.Description;
+        doneTextBox.Text = itemFound.Done.ToString();
 
-            titleTextBox.Text = itemFound.Title;
-            descriptionTextBox.Text = itemFound.Description;
-            doneTextBox.Text = itemFound.Done.ToString();
+        doneTextBox.Foreground = itemFound.Done ? Brushes.Green : Brushes.Red;
+    }
 
-            if (itemFound.Done) doneTextBox.Foreground = Brushes.Green;
-            else doneTextBox.Foreground = Brushes.Red;
+    private void ClearPreviewBox()
+    {
+        titleTextBox.Clear();
+        descriptionTextBox.Clear();
+        doneTextBox.Clear();
+    }
+
+    private void UpdateListBox()
+    {
+        listBox.Items.Clear();
+        
+        if (_itemsList.Count <= 0)
+        {
+            return;
         }
 
-
-        private void updateListBox()
+        foreach (ToDoItem item in _itemsList)
         {
-            listBox.Items.Clear();
-            if (itemsList.Count <= 0) return;
+            listBox.Items.Add(item.Title);
+        }
+    }
 
-            foreach (var item in itemsList)
-            {
-                listBox.Items.Add(item.Title);
-            }
+
+    private void DeleteListItem(object sender, RoutedEventArgs e)
+    {
+        if (listBox.SelectedIndex < 0)
+        {
+            return;
         }
 
+        var itemTitle = listBox.SelectedItem.ToString();
+        
+        ToDoItem itemToRemove = GetItemFromList(itemTitle);
 
-        private void deleteListItem(object sender, RoutedEventArgs e)
+        listBox.SelectedIndex = -1;
+        _itemsList.Remove(itemToRemove);
+        UpdateListBox();
+    }
+
+
+    private void CheckDoneItem(object sender, RoutedEventArgs e)
+    {
+        if (listBox.SelectedIndex < 0) return;
+
+        var itemTitle = listBox.SelectedItem.ToString();
+        
+        ToDoItem itemToCheck = GetItemFromList(itemTitle);
+        
+        itemToCheck.Done = !itemToCheck.Done;
+        UpdateListBox();
+    }
+
+    private ToDoItem GetItemFromList(string itemTitle)
+    {
+        ToDoItem? itemFound = _itemsList.Find(findItem => findItem.Title == itemTitle);
+
+        if (itemFound is null)
         {
-            if (listBox.SelectedIndex < 0) return;
-
-            var item = listBox.SelectedItem.ToString();
-            var itemToRemove = itemsList.FirstOrDefault(x => x.Title == item);
-            if (itemToRemove is null) return;
-
-            listBox.SelectedIndex = -1;
-            itemsList.Remove(itemToRemove);
-            updateListBox();
+            throw new Exception("Could not find selected item");
         }
 
+        return itemFound;
+    }
 
-        private void checkDoneItem(object sender, RoutedEventArgs e)
+    private void OpenAddWindow(object sender, RoutedEventArgs e)
+    {
+        var addWindow = new AddItemWindow(parent: this);
+        addWindow.Show();
+    }
+
+    public void AddNewItem(string _title, string _description)
+    {
+        var itemToAdd = new ToDoItem
         {
-            if (listBox.SelectedIndex < 0) return;
+            Title = _title,
+            Description = _description
+        };
+        _itemsList.Add(itemToAdd);
+        UpdateListBox();
+    }
 
-            var item = listBox.SelectedItem.ToString();
-            var itemToCheck = itemsList.Single(x => x.Title == item);
-            itemToCheck.Done = !itemToCheck.Done;
-            updateListBox();
-            listBox.SelectedItem = item;
+    private void ImportItemsList()
+    {
+        string json;
+
+        if (!File.Exists("itemsList.json"))
+        {
+            return;
         }
 
-        private void openAddWindow(object sender, RoutedEventArgs e)
+        using (var r = new StreamReader("itemsList.json"))
         {
-            AddItemWindow addWindow = new AddItemWindow(this);
-            addWindow.Show();
+            json = r.ReadToEnd();
         }
 
-        public void addNewItem(string _title, string _description)
+        try
         {
-            var itemToAdd = new ToDoItem()
-            {
-                Title = _title,
-                Description = _description
-            };
-            itemsList.Add(itemToAdd);
-            updateListBox();
+            _itemsList = JsonSerializer.Deserialize<List<ToDoItem>>(json) ?? new List<ToDoItem>();
         }
-
-        private void importItemsList()
+        catch
         {
-            if (!File.Exists("itemsList.json")) return;
-
-            using (StreamReader r = new StreamReader("itemsList.json"))
-            {
-                json = r.ReadToEnd();
-            }
-
-            try
-            {
-                itemsList = JsonSerializer.Deserialize<List<ToDoItem>>(json);
-            }
-            catch
-            {
-                throw new Exception("Invalid file format");
-            }
+            throw new Exception("Invalid file format");
         }
+    }
 
-        private void saveItemsList(object sender, RoutedEventArgs e)
-        {
-            using (StreamWriter file = File.CreateText("itemsList.json"))
-            {
-                json = JsonSerializer.Serialize(itemsList, new JsonSerializerOptions() { WriteIndented = true });
-                file.Write(json);
-            }
-        }
+    private void SaveItemsList(object sender, RoutedEventArgs e)
+    {
+        string json = JsonSerializer.Serialize(_itemsList, new JsonSerializerOptions { WriteIndented = true });
+
+        using StreamWriter file = File.CreateText("itemsList.json");
+
+        file.Write(json);
     }
 }

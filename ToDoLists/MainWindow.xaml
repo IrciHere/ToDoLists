@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ToDoLists"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" MinHeight="450" MinWidth="800">
     <Border  BorderBrush="#000000" BorderThickness="2">
@@ -27,17 +26,13 @@
                         <RowDefinition Height="10*"  />
                         <RowDefinition Height="1*"  />
                     </Grid.RowDefinitions>
-
-
+                    
                     <Border BorderBrush="#BBBBBB" BorderThickness="0.5"></Border>
                     <TextBox Name="titleTextBox" Grid.Row="0" FontWeight="ExtraBold" FontSize="20.0"></TextBox>
                     <TextBox Name="descriptionTextBox" Grid.Row="1" FontSize="16.0" FontFamily="Times New Roman"></TextBox>
                     <TextBox Name="doneTextBox" Grid.Row="2" FontSize="20" FontWeight="Bold"></TextBox>
-
-
                 </Grid>
                 
-
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -46,23 +41,17 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                   
-                    <Button Name="checkDone" Click="checkDoneItem" Grid.Column="0">DONE</Button>
-                    <Button Name="deleteItem" Click="deleteListItem" Grid.Column="1">DELETE</Button>
-                    <Button Name="saveItems" Click="saveItemsList" Grid.Column="2">SAVE</Button>
-                    <Button Name="addItem" Click="openAddWindow" Grid.Column="3">ADD</Button>
-                    
-                    
-                    
+                    <Button Click="CheckDoneItem" Grid.Column="0">DONE</Button>
+                    <Button Click="DeleteListItem" Grid.Column="1">DELETE</Button>
+                    <Button Click="SaveItemsList" Grid.Column="2">SAVE</Button>
+                    <Button Click="OpenAddWindow" Grid.Column="3">ADD</Button>
                 </Grid>
-                
-                
             </Grid>
 
-            <ListBox Name="listBox" Grid.Column="0" SelectionChanged="showItem"></ListBox>
+            <ListBox Name="listBox" Grid.Column="0" SelectionChanged="ShowItem"></ListBox>
 
             <Border BorderBrush="#AAAAAA" BorderThickness="2" Grid.Column="0"/>
             <Border BorderBrush="#AAAAAA" BorderThickness="2" Grid.Column="1"/>
-            <Border BorderBrush="#AAAAAA" BorderThickness="2" Grid.Row="1"/>
         </Grid>
     </Border>
 </Window>
