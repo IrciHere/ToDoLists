@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
+﻿using System.Text.Json;
 
-namespace ToDoLists;
+namespace ToDoLists.Core;
 
 public class ToDoListManager
 {

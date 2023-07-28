@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ToDoLists;
+﻿namespace ToDoLists.Core;
 
 public class ToDoItem
 {
