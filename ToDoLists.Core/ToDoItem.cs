@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace ToDoLists;
+﻿namespace ToDoLists.Core;
 
 public class ToDoItem
 {
     private readonly string _title = string.Empty;
-    
+
     public required string Title
     {
         get => _title;
@@ -21,5 +19,5 @@ public class ToDoItem
     }
 
     public string Description { get; init; } = string.Empty;
-    public bool Done { get; set; } = false;
+    public bool Done { get; set; }
 }

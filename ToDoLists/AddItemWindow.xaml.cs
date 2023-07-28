@@ -2,31 +2,34 @@
 
 namespace ToDoLists;
 
-public partial class AddItemWindow : Window
+public partial class AddItemWindow
 {
-    private MainWindow parent;
-    private string title, description;
-    public AddItemWindow(MainWindow _parent)
+    private readonly MainWindow _parent;
+
+    public AddItemWindow(MainWindow parent)
     {
         InitializeComponent();
-        parent = _parent;
+        _parent = parent;
     }
 
-    private void closeWindow(object sender, RoutedEventArgs e)
+    private void CloseWindow(object sender, RoutedEventArgs e)
     {
         Close();
     }
 
-    private void addItem(object sender, RoutedEventArgs e)
+    private void AddItem(object sender, RoutedEventArgs e)
     {
-        if (titleBox.Text == "")
+        string itemTitle = titleBox.Text;
+        string itemDescription = descriptionBox.Text;
+
+        if (string.IsNullOrWhiteSpace(itemTitle))
         {
             MessageBox.Show("Title can't be empty!");
             return;
         }
-        title = titleBox.Text;
-        description = descriptionBox.Text;
-        parent.addNewItem(title, description);
+        
+        _parent.AddNewItem(itemTitle, itemDescription);
+        
         Close();  
     }
 }
